@@ -1,6 +1,6 @@
 // Guarda la app en el celular para que ande sin internet.
 // Si cambiás index.html, subí también este archivo con otro número de versión.
-const VERSION = "placard-v2";
+const VERSION = "placard-v5";
 const APP = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-512-maskable.png"];
 
 self.addEventListener("install", e => {

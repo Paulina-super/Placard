@@ -4,25 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi placard</title>
-<meta name="theme-color" content="#1D2433">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="only light">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Courier+Prime&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Courier+Prime&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#ECEEF2;--surface:#FFFFFF;--soft:#DFE3EA;--ink:#1D2433;--muted:#5B6376;--line:#C9CFDA;
   --accent:#3B4FA8;--accent-ink:#FFFFFF;--label:#1D2433;--label-ink:#E9ECF3;--warn:#A9471F;--ok:#2B7355;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#13161D;--surface:#1C2029;--soft:#242935;--ink:#E6E9F0;--muted:#9AA2B4;--line:#323949;
-  --accent:#93A4F2;--accent-ink:#13161D;--label:#E6E9F0;--label-ink:#1C2029;--warn:#F08A5D;--ok:#6CC49A;}}
-:root[data-theme="dark"]{
-  --bg:#13161D;--surface:#1C2029;--soft:#242935;--ink:#E6E9F0;--muted:#9AA2B4;--line:#323949;
-  --accent:#93A4F2;--accent-ink:#13161D;--label:#E6E9F0;--label-ink:#1C2029;--warn:#F08A5D;--ok:#6CC49A;}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
@@ -133,6 +128,32 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .rtag b{margin-left:6px}
 .summary.s3{grid-template-columns:repeat(3,1fr)}
 .verdict{font-family:"Bricolage Grotesque",sans-serif;font-size:1.6rem}
+
+/* ---- estilo minimalista blanco y negro ---- */
+:root{color-scheme:only light;--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F3F3F3;--ink:#000000;--muted:#707070;--line:#E2E2E2;
+  --accent:#000000;--accent-ink:#FFFFFF;--label:#000000;--label-ink:#FFFFFF;--warn:#A12A1B;--ok:#2B7355}
+body{font-family:Jost,"Helvetica Neue",Arial,sans-serif;font-weight:300;letter-spacing:.01em}
+h1,h2,h3,.summary b,.big,.meas b,.verdict{font-family:Jost,"Helvetica Neue",Arial,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.12em}
+h1{font-size:1.5rem}h2{font-size:1rem}h3{font-size:.8rem;color:var(--muted)}
+strong,b{font-weight:500}
+.btn,.chip,.card,.summary button,.ph,.empty-state,.note,.banner,.rcat,.meas div,.board,.pick,.editor,.detail-img,.tag,.slot,
+input[type=text],input[type=number],textarea,select,.ocard{border-radius:0}
+.btn{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:400;padding:12px 18px}
+.btn.ghost{border-color:var(--ink)}
+.chip{text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;border-color:var(--line);padding:7px 12px}
+.tag{text-transform:uppercase;letter-spacing:.06em;font-size:.72rem}
+.card,.ocard,.summary button,.rcat,.meas div,.note{border-color:var(--line);box-shadow:none}
+.card{border:0;padding:0;gap:4px}
+.card .nm{font-size:.78rem;font-weight:400;text-transform:uppercase;letter-spacing:.06em}
+.ph,.detail-img,.board{background:var(--soft)}
+.summary span,.rlabel,.hint,.muted.small{text-transform:uppercase;letter-spacing:.06em;font-size:.68rem}
+.fab{border-radius:0;box-shadow:none;width:52px;height:52px;font-size:1.6rem;font-weight:300}
+nav.tabs{border-top:1px solid var(--line)}
+nav.tabs .ic{display:none}
+nav.tabs button{text-transform:uppercase;letter-spacing:.1em;font-size:.66rem;padding:14px 2px;border-radius:0}
+nav.tabs button[aria-current="true"]{background:none;font-weight:500;box-shadow:inset 0 2px 0 var(--ink)}
+.sheet-bar{border-bottom:1px solid var(--line)}
+.toast{border-radius:0;text-transform:uppercase;letter-spacing:.08em;font-size:.75rem}
 </style>
 </head>
 <body>
@@ -220,7 +241,7 @@ async function exportBackup(){
   const fotos={};for(const [id,b] of await IDB.all("fotos"))fotos[id]=await blobToDataURL(b);
   const data={app:"placard",version:1,fecha:new Date().toISOString(),prendas:S.items,outfits:S.outfits,medidas:S.medidas,fotos};
   const url=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
-  const a=document.createElement("a");a.href=url;a.download="placard-backup-"+new Date().toISOString().slice(0,10)+".json";
+  const a=document.createElement("a");a.href=url;const d=new Date(),p=n=>String(n).padStart(2,"0");a.download=`placard-backup-${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}.json`;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
   try{localStorage.setItem("ultimoBackup",Date.now());}catch(e){}
 }
@@ -237,7 +258,7 @@ async function importBackup(file){
 function backupSheet(){
   const lb=lastBackup();
   openSheet("Backup",`<p>Todo lo que cargás queda guardado solo en este celular, dentro del navegador. Si borrás los datos del navegador o cambiás de teléfono, se pierde, salvo que tengas un backup.</p>
-   <p class="muted small">${lb?"Último backup: "+new Date(lb).toLocaleDateString("es-AR"):"Todavía no hiciste ningún backup."}</p>
+   <p class="muted small">${lb?"Último backup: "+new Date(lb).toLocaleDateString("es-AR")+" a las "+new Date(lb).toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit",hour12:false})+" h":"Todavía no hiciste ningún backup."}</p>
    <div class="note" style="margin-top:16px"><strong>Descargar backup</strong><p class="small muted" style="margin:4px 0 10px">Baja un archivo con todas tus prendas, fotos, looks y medidas. Guardalo en Drive, en la compu o mandátelo por mail.</p><button class="btn" id="bexp">Descargar backup</button></div>
    <div class="note" style="margin-top:12px"><strong>Restaurar un backup</strong><p class="small muted" style="margin:4px 0 10px">Reemplaza todo lo que hay ahora en la app por lo que tiene el archivo.</p><label class="btn ghost filebtn">Elegir archivo<input type="file" accept=".json,application/json" id="bimp"></label></div>
    <p class="small" id="bmsg" style="margin-top:12px"></p>`,el=>{
