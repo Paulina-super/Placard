@@ -154,6 +154,12 @@ nav.tabs button{text-transform:uppercase;letter-spacing:.1em;font-size:.66rem;pa
 nav.tabs button[aria-current="true"]{background:none;font-weight:500;box-shadow:inset 0 2px 0 var(--ink)}
 .sheet-bar{border-bottom:1px solid var(--line)}
 .toast{border-radius:0;text-transform:uppercase;letter-spacing:.08em;font-size:.75rem}
+.bars{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.bar{background:none;border:0;padding:0;text-align:left;color:inherit;width:100%}
+.bar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.bar-top b{font-weight:500;font-size:.85rem}
+.bar-track{display:block;height:8px;background:var(--soft)}
+.bar-fill{display:block;height:100%;background:var(--ink)}
 </style>
 </head>
 <body>
@@ -376,7 +382,9 @@ function vResumen(){
   const temps=(l,base)=>TEMPS.map(([k,t])=>tag(t,l.filter(i=>(i.temporadas||[]).includes(k)).length,{...base,temp:k})).join("")||`<span class="muted small">Sin temporada cargada</span>`;
   const cats=CATS.map(([k,t])=>[k,t,its.filter(i=>i.categoria===k)]);
   return `<h1>Resumen</h1>
-  <div class="summary s3">${cats.map(([k,t,l])=>`<button data-go="${esc(JSON.stringify({cat:k}))}"><b>${l.length}</b><span>${t}</span></button>`).join("")}</div>
+  <div class="rcat"><h2>Por categoría</h2>
+    <div class="bars">${[...cats].sort((a,b)=>b[2].length-a[2].length).map(([k,t,l])=>{const pc=Math.round(l.length*100/n);return `<button class="bar" data-go="${esc(JSON.stringify({cat:k}))}"><span class="bar-top"><span>${t}</span><span><b>${pc}%</b> <span class="muted">${l.length}</span></span></span><span class="bar-track"><span class="bar-fill" style="width:${pc}%"></span></span></button>`;}).join("")}</div>
+  </div>
   <div class="rcat"><div class="spread"><h2>Todo el placard</h2><b class="big">${n}</b></div>
     <div class="rlabel">Temporada</div><div class="tags">${temps(its,{})}</div>
     <div class="rlabel">Va con mi paleta</div><div class="tags">${PALETA.map(([k,t])=>tag(t,its.filter(i=>i.paleta===k).length,{pal:k})).join("")}${tag("Sin marcar",its.filter(i=>!i.paleta).length,{pal:"sin"})}</div>
